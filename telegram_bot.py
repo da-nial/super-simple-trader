@@ -47,8 +47,8 @@ class SmartTelegramBot:
         self.WEBHOOK_PATH = '/webhook/' + os.environ.get('TG_BOT_TOKEN')
         self.WEBHOOK_URL = urljoin(self.WEBHOOK_HOST, self.WEBHOOK_PATH)
 
-        self.WEBAPP_HOST = 'localhost'
-        self.WEBAPP_PORT = os.environ.get('PORT')
+        self.WEBAPP_HOST = '0.0.0.0'
+        self.WEBAPP_PORT = os.environ.get('PORT', 3000)
 
         self.bot = Bot(token=bot_token)
         self.dp = Dispatcher(bot=self.bot, storage=MemoryStorage())
