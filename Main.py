@@ -20,8 +20,11 @@ if __name__ == '__main__':
     client = SmartTelegramClient(SESSION, API_ID, API_HASH)
     bot = telegram_bot.SmartTelegramBot(bot_token=bot_token, telegram_client=client)
 
-    loop = asyncio.get_event_loop()
-    task1 = loop.create_task(client.run())
-    task2 = loop.create_task(bot.polling())
-    loop.run_until_complete(asyncio.wait([task1, task2]))
-    loop.close()
+    bot.polling()
+
+    # loop = asyncio.get_event_loop()
+    # # task1 = loop.create_task(client.run())
+    # task2 = loop.create_task(bot.polling())
+    # # loop.run_until_complete(asyncio.wait([task1, task2]))
+    # loop.run_until_complete(asyncio.wait([task2]))
+    # loop.close()
