@@ -15,7 +15,7 @@ if __name__ == '__main__':
     SESSION = os.environ.get('TG_SESSION', 'interactive')
     API_ID = get_env('TG_API_ID', 'Enter your API ID: ', int)
     API_HASH = get_env('TG_API_HASH', 'Enter your API hash: ')
-    bot_token = '1146950271:AAHOqcsh3JYS7WxTWJiVxV-dbtMYzn_RtRo'
+    bot_token = get_env('TG_BOT_TOKEN', 'Enter Bot Token: ')
 
     client = SmartTelegramClient(SESSION, API_ID, API_HASH)
     bot = telegram_bot.SmartTelegramBot(bot_token=bot_token, telegram_client=client)

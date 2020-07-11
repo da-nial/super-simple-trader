@@ -34,6 +34,15 @@ class SmartTelegramBot:
          :param telegram_client: The SmartTelegramClient instance which bot is supposed to control
         """
 
+        # # webhook settings
+        # self.WEBHOOK_HOST = 'https://your.domain'
+        # self.WEBHOOK_PATH = '/path/to/api'
+        # self.WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+        #
+        # # webserver settings
+        # self.WEBAPP_HOST = 'localhost'  # or ip
+        # self.WEBAPP_PORT = 3001
+
         self.bot = Bot(token=bot_token)
         self.dp = Dispatcher(bot=self.bot, storage=MemoryStorage())
         self.dp.middleware.setup(LoggingMiddleware())
