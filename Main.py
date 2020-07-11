@@ -22,6 +22,6 @@ if __name__ == '__main__':
 
     loop = asyncio.get_event_loop()
     task1 = loop.create_task(client.run())
-    task2 = loop.create_task(bot.polling(loop=loop))
+    task2 = loop.create_task(bot.polling())
     loop.run_until_complete(asyncio.wait([task1, task2]))
     loop.close()

@@ -1,7 +1,13 @@
+import os
+from helper import get_env
+
 from aiogram import Bot, types
 
 from aiogram.dispatcher import Dispatcher, filters
 from aiogram.utils import executor
+from aiogram.utils.executor import start_webhook
+
+from urllib.parse import urljoin
 
 from telegram_client import SmartTelegramClient
 
@@ -17,6 +23,8 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from datetime import datetime, time
 
 from helper import is_time_between
+
+PORT = int(os.environ.get('PORT', 5000))
 
 
 class SmartTelegramBot:
@@ -34,14 +42,13 @@ class SmartTelegramBot:
          :param telegram_client: The SmartTelegramClient instance which bot is supposed to control
         """
 
-        # # webhook settings
-        # self.WEBHOOK_HOST = 'https://your.domain'
-        # self.WEBHOOK_PATH = '/path/to/api'
-        # self.WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
-        #
-        # # webserver settings
-        # self.WEBAPP_HOST = 'localhost'  # or ip
-        # self.WEBAPP_PORT = 3001
+        # webhook settings
+        self.WEBHOOK_HOST = 'https://smart-replier-staging.herokuapp.com'
+        self.WEBHOOK_PATH = '/webhook/' + os.environ.get('TG_BOT_TOKEN')
+        self.WEBHOOK_URL = urljoin(self.WEBHOOK_HOST, self.WEBHOOK_PATH)
+
+        self.WEBAPP_HOST = '0.0.0.0'
+        self.WEBAPP_PORT = os.environ.get('PORT')
 
         self.bot = Bot(token=bot_token)
         self.dp = Dispatcher(bot=self.bot, storage=MemoryStorage())
@@ -298,16 +305,23 @@ class SmartTelegramBot:
                 await message.reply(reply_message, reply_markup=keyboards.cancel_kb)
                 await BotStates.DEFAULT.set()
 
-    @staticmethod
-    async def shutdown(dispatcher: Dispatcher):
+    async def on_startup(self, dp):
+        """Simple hook for aiohttp application which manages webhook"""
+        await self.bot.delete_webhook()
+        await self.bot.set_webhook(self.WEBHOOK_URL)
+
+    async def on_shutdown(self, dispatcher: Dispatcher):
         await dispatcher.storage.close()
         await dispatcher.storage.wait_closed()
 
-    def polling(self, loop):
-        executor.start_polling(dispatcher=self.dp,
-                               skip_updates=True,
-                               loop=loop,
-                               on_shutdown=self.shutdown)
+    def polling(self):
+        # executor.start_polling(dispatcher=self.dp,
+        #                        skip_updates=True,
+        #                        loop=loop,
+        #                        on_shutdown=self.shutdown)
+        executor.start_webhook(dispatcher=self.dp, webhook_path=self.WEBHOOK_PATH,
+                               on_startup=self.on_startup, on_shutdown=self.on_shutdown,
+                               host=self.WEBAPP_HOST, port=self.WEBAPP_PORT)
 
     def order_review(self):
         order_review = '📍 سفارش جدید'
