@@ -43,8 +43,8 @@ class SmartTelegramBot:
         """
 
         # webhook settings
-        self.WEBHOOK_HOST = 'https://smart-replier-staging.herokuapp.com'
-        self.WEBHOOK_PATH = '/webhook/' + os.environ.get('TG_BOT_TOKEN')
+        self.WEBHOOK_HOST = 'https://smart-replier-staging.herokuapp.com/'
+        self.WEBHOOK_PATH = 'webhook/' + os.environ.get('TG_BOT_TOKEN')
         self.WEBHOOK_URL = urljoin(self.WEBHOOK_HOST, self.WEBHOOK_PATH)
 
         self.WEBAPP_HOST = '0.0.0.0'
